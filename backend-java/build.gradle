@@ -13,23 +13,24 @@ repositories {
 }
 
 dependencies {
-    // Spring
+    // Spring Boot starters
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    // JWT
+    // JWT (for future authentication support)
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
     // Databases
-    runtimeOnly 'com.h2database:h2'          // dev (Option 2: in-memory)
-    runtimeOnly 'org.postgresql:postgresql'  // prod/local Postgres (optional)
+    runtimeOnly 'com.h2database:h2'          // In-memory dev database
+    runtimeOnly 'org.postgresql:postgresql'  // Optional: PostgreSQL production
 
+    // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
