@@ -10,7 +10,7 @@ export default function App() {
     inventory: "",
   });
 
-  // Load products from backend
+  // Load all products on component mount
   useEffect(() => {
     axios
       .get("/catalog")
@@ -18,12 +18,12 @@ export default function App() {
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
-  // Handle input change
+  // Handle form field changes
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Handle form submit
+  // Add a new product
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
@@ -40,10 +40,19 @@ export default function App() {
       .catch((err) => console.error("Error adding product:", err));
   };
 
+  // Delete a product
+  const handleDelete = (id) => {
+    axios
+      .delete(`/catalog/${id}`)
+      .then(() => setProducts(products.filter((p) => p.id !== id)))
+      .catch((err) => console.error("Error deleting product:", err));
+  };
+
   return (
     <div style={{ fontFamily: "Arial, sans-serif", margin: "2rem" }}>
       <h1>🛒 Mini Amazon</h1>
 
+      {/* Add product form */}
       <form
         onSubmit={handleSubmit}
         style={{
@@ -70,17 +79,17 @@ export default function App() {
         />
         <input
           name="price"
-          placeholder="Price"
           type="number"
           step="0.01"
+          placeholder="Price"
           value={form.price}
           onChange={handleChange}
           required
         />
         <input
           name="inventory"
-          placeholder="Inventory"
           type="number"
+          placeholder="Inventory"
           value={form.inventory}
           onChange={handleChange}
           required
@@ -88,16 +97,30 @@ export default function App() {
         <button type="submit">Add Product</button>
       </form>
 
+      {/* Product list */}
       <h2>📦 Product List</h2>
       {products.length === 0 ? (
         <p>No products found.</p>
       ) : (
         <ul>
           {products.map((p) => (
-            <li key={p.id}>
+            <li key={p.id} style={{ marginBottom: "1rem" }}>
               <strong>{p.title}</strong> — ${p.price.toFixed(2)} <br />
               <small>{p.description}</small> <br />
-              <small>Inventory: {p.inventory}</small>
+              <small>Inventory: {p.inventory}</small> <br />
+              <button
+                style={{
+                  marginTop: "0.5rem",
+                  background: "tomato",
+                  color: "white",
+                  border: "none",
+                  padding: "0.3rem 0.6rem",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleDelete(p.id)}
+              >
+                Delete
+              </button>
             </li>
           ))}
         </ul>
