@@ -1,6 +1,14 @@
 package com.example.miniamazon.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.miniamazon.model.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ProductRepository extends JpaRepository<Product, Long> { }
+import java.util.List;
+
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long> {
+
+    // Optional: for search functionality (title contains query)
+    List<Product> findByTitleContainingIgnoreCase(String title);
+}
